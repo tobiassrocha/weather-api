@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+	<style>
+		@import url('https://fonts.googleapis.com/css?family=Lato:100,300,400,700,900&display=swap');
+
+		:root {
+			--background-cards: rgba(255,255,255,.2);
+			--border-cards: 2px solid #fff;
+			--border-radius-cards: 5px;
+		}
+
+		html,
+		body {
+			height: 100%;
+			font-family: "Lato", sans-serif;
+		}
+
+		body {
+			background: linear-gradient(135deg, rgb(214, 81, 84), rgb(255, 129, 83));
+			background-attachment: fixed;
+		}
+
+		.previsao {
+			position: relative;
+			top: 2rem;
+		}
+
+		/* Campo CEP */
+		.form-cep {
+			display: block;
+			margin: 0 auto;
+			text-align: center;
+			position: relative;
+			top: 2rem;
+		}
+		.form-cep * {
+			border: none;
+		}
+		.input-cep {
+			border-radius: 5px 0 0 5px;
+			padding: 1rem;
+			width: 50%;
+			font-size: 1.2rem;
+		}
+		.btn-form-cep {
+			border-radius: 0 5px 5px 0;
+			margin-left: -5px;
+			padding: 1rem 0;
+			width: 3rem;
+			font-size: 1.2rem;
+			background: rgb(196, 0, 4);
+			color: #fff;
+		}
+
+		/* localidade */
+		.localidade {
+			text-align: center;
+			color: #fff;
+			font-size: 1.5rem;
+			margin-top: 1rem;
+			margin-bottom: 1rem;
+		}
+
+		/* Card Tempo (HOJE) */
+		.card-tempo {
+			width: 80%;
+			max-width: 35rem;
+			margin: 0 auto;
+			background: var(--background-cards);
+			border: var(--border-cards);
+			border-radius: var(--border-radius-cards);
+			text-align: center;
+			color: #fff;
+			padding: 1rem;
+			font-size: 1.2rem;
+		}
+		.card-tempo-temperatura-temp {
+			font-size: 5rem;
+			font-weight: 900;
+			position: relative;
+		}
+		.card-tempo-caracteristicas {
+			display: flex;
+			justify-content: space-around;
+			margin-top: 1rem;
+		}
+		.card-tempo-caracteristica span {
+			display: block;
+		}
+		.card-tempo-caracteristica-label {
+			font-size: 1.05rem;
+		}
+		.card-tempo-caracteristica-valor {
+			margin-top: .1rem;
+			font-size: 1.5rem;
+			font-weight: 700;
+		}
+
+		/* Cards - temperatura semana  */
+		.card-tempo-semana {
+			width: 95%;
+			max-width: 55rem;
+			margin: 0 auto 0 auto;
+			display: flex;
+			text-align: center;
+			justify-content: space-around;
+		}
+		.card-tempo-semana-dia {
+			border-radius: var(--border-radius-cards);
+			padding: 2rem .5rem;
+			color: #fff;
+		}
+		.card-tempo-semana-dia-data {
+			font-size: 2rem;
+			font-weight: 700;
+		}
+		.card-tempo-semana-temp-max,
+		.card-tempo-semana-temp-min {
+			font-size: 1.2rem;
+			font-weight: 700;
+		}
+		.card-tempo-semana-temp-max {
+			margin-top: 1rem;
+			color: #bc0000;
+		}
+		.card-tempo-semana-temp-min {
+			margin-bottom: .6rem;
+			color: #0057bc;	
+		}
+		.card-tempo-semana-temp-min-val:before {
+			content: '\f063';
+			font-family: "Font Awesome 5 Free";
+			font-weight: 900;
+		}
+		.card-tempo-semana-temp-max-val:before {
+			content: '\f062';
+			font-family: "Font Awesome 5 Free";
+			font-weight: 900
+		}
+
+		/* Informações */
+		.informacoes-btn {
+			position: absolute;
+			bottom: .5rem;
+			right: .5rem;
+			font-size: 2rem;
+			width: 3.5rem;
+			height: 3.5rem;
+			background: rgb(196, 0, 4);
+			border: none;
+			color: #fff;
+			border-radius: 50%;
+		}
+		.informacoes-btn i {
+			transition: .2s;
+		}
+		.informacoes-btn:hover {
+			cursor: pointer;
+		}
+		.informacoes-btn:hover i {
+			text-shadow: 4px 4px 0 rgba(0,0,0,.8);
+		}
+		.informacoes-painel {
+			position: fixed;
+			background: #fff;
+			border-radius: 5px;
+			width: 95%;
+			max-width: 40rem;
+			left: 50%;
+			top: 50%;
+			transform: translate(-50%,-50%);
+			box-shadow: 0 0 0 9999px rgba(0,0,0,.5);
+			padding: 2rem 1rem;
+			box-sizing: border-box;
+			display: none;
+			overflow-y: scroll;
+		}
+		.informacoes-painel-titulo {
+			text-align: center;
+			font-size: 2rem;
+			font-weight: 900;
+			margin-bottom: 1rem;
+		}
+		.informacoes-painel-passos-projeto {
+			list-style-type: decimal;
+		}
+		.informacoes-painel-lista {
+			padding-left: 2rem;
+		}
+		.informacoes-painel-subtitulo {
+			font-weight: 900;
+			font-size: 1.2rem;
+			margin: 0.8rem 0 0.5rem 0;
+		}
+		.painel-lista-item  {
+			margin: 0.4rem 0;
+		}
+		.informacoes-painel-descricao {
+			text-align: center;
+		}
+
+		@media (max-width: 992px) {
+			.card-tempo-semana-resumo {
+				display: none;
+			}
+		}
+
+		@media (max-width: 768px) {
+			.input-cep {
+				width: 60%;
+			}
+			.informacoes-painel {
+				height: 95vh
+			}
+		}
+
+		@media (max-width: 576px) {
+			.card-tempo-bloco {
+				margin: 1rem 0;
+			}
+			.card-tempo-caracteristicas {
+				display: block;
+			}
+			.card-tempo-caracteristica {
+				margin-bottom: 1.2rem;
+			}
+			.card-tempo-caracteristica:last-of-type {
+				margin-bottom: 0;
+			}
+			.card-tempo-semana {
+				display: grid;
+				grid-template-columns: 100%;
+				justify-content: center;
+			}
+			.card-tempo-semana-dia {
+				width: 40%;
+				padding: .5rem 0;
+				margin: 0 auto .4rem auto;
+			}
+			.card-tempo-semana-dia:last-of-type {
+				margin: 0 auto 1rem auto;
+			}
+			.card-tempo-semana-dia-data {
+				font-size: 1.6rem;
+			}
+			.card-tempo-semana-temp-max {
+				margin-top: .4rem;
+			}
+			.card-tempo-semana-temp-min {
+				margin-bottom: 0;
+			}
+		}
+
+		/* --- */
+		.localidade, .card-tempo{
+			display: none;
+		}
+		.semana-dia-1,
+		.semana-dia-2,
+		.semana-dia-3,
+		.semana-dia-4,
+		.semana-dia-5 {
+			display: none;
+			box-sizing: border-box;
+		}
+		.sr-only {
+			position: absolute;
+			width: 1px;
+			height: 1px;
+			opacity: .01;
+			top: -9999px;
+			left: -9999px;
+		}
+
+		.slick-prev,
+		.slick-next {
+			display: none !important;
+		}
+
+		.waiting {
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background: rgba(0,0,0,.3);
+			display: none;
+		}
+		.waiting:after {
+			content: '\f254';
+			font-family: "Font Awesome 5 Free";
+			font-weight: 900;
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			font-size: 5rem;
+			line-height: 1em;
+			transform: translate(-50%,-50%);
+			color:#fff;
+			animation-name: girar-ampulheta;
+			animation-duration: .8s;
+			animation-fill-mode: forwards;
+			transform-origin: 50%;
+			animation-iteration-count: infinite;
+		}
+		@keyframes girar-ampulheta {
+			0% {
+				transform: rotate(0);
+			}
+			
+			90% {
+				transform: rotate(0);
+			}
+			
+			100% {
+				transform: rotate(360deg);
+			}
+			
+			
+		}
+
+		.alert {
+			position: fixed;
+			top: .6rem;
+			width:80%;
+			left: 50%;
+			transform: translateX(-50%);
+			padding: .75rem 1.25rem;;
+			background: #f8d7da;
+			border: 1px solid #f5c6cb;
+			border-radius: .25rem;
+			box-shadow: 3px 3px 5px rgba(0,0,0,0.2);
+			color: #721c24
+		}
+		.alert-erro-consulta, .alert-cep-nao-encontrado {
+			display: none;	
+		}
+	</style>
+</head>
+<body>
+	<form class="form-cep">
+		<select class="input-cep" name="input-cep">
+			<option value="99010010">passo fundo</option>
+			<option value="99500000">carazinho</option>
+			<option value="99530000">chapada</option>
+			<option value="99560000">sarandi</option>
+			<option value="99700030">erechim</option>
+		</select>
+	</form>
+	<div class="previsao">
+		<p class="localidade">
+			<span class="localidade-cidade"></span>
+			/
+			<span class="localidade-uf"></span>
+		</p>
+		<div class="card-tempo">
+			<p class="card-tempo-hoje"></p>
+			<div class="card-tempo-bloco">
+				<p class="card-tempo-temperatura"><span class="card-tempo-temperatura-temp"></span></p>
+				<p class="card-tempo-condicao"></p>
+			</div>
+			<div class="card-tempo-caracteristicas">
+				<p class="card-tempo-caracteristica card-tempo-caracteristicas-umidade">
+					<span class="card-tempo-caracteristica-label">Umidade: </span>
+					<span class="card-tempo-caracteristica-valor card-tempo-caracteristicas-umidade-valor"></span>
+				</p>
+				<p class="card-tempo-caracteristica card-tempo-caracteristicas-sensacao">
+					<span class="card-tempo-caracteristica-label">Sensação: </span>
+					<span class="card-tempo-caracteristica-valor card-tempo-caracteristicas-sensacao-valor"></span>
+				</p>
+				<p class="card-tempo-caracteristica card-tempo-caracteristicas-vento">
+					<span class="card-tempo-caracteristica-label">Vento: </span>
+					<span class="card-tempo-caracteristica-valor card-tempo-caracteristicas-vento-valor"></span>
+				</p>
+			</div>
+		</div>
+		<div class="card-tempo-semana">
+			<div class="card-tempo-semana-dia semana-dia-1">
+				<p class="card-tempo-semana-dia-data"></p>
+				<div class="card-tempo-semana-temp-max">
+					<span class="sr-only">Máximo:</span>
+					<span class="card-tempo-semana-temp-max-val"></span>º
+				</div>
+				<div class="card-tempo-semana-temp-min">
+					<span class="sr-only">Mínimo:</span>
+					<span class="card-tempo-semana-temp-min-val"></span>º
+				</div>
+			</div>
+	
+			<div class="card-tempo-semana-dia semana-dia-2">
+				<p class="card-tempo-semana-dia-data"></p>
+				<div class="card-tempo-semana-temp-max">
+					<span class="sr-only">Máximo:</span>
+					<span class="card-tempo-semana-temp-max-val"></span>º
+				</div>
+				<div class="card-tempo-semana-temp-min">
+					<span class="sr-only">Mínimo:</span>
+					<span class="card-tempo-semana-temp-min-val"></span>º
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="waiting"></div>
+	<div class="alert alert-erro-consulta">
+		Alguma coisa deu errada. O CEP está correto? Se sim, então o problema é interno. Aguarde um momentinho até que seja normalizado.
+	</div>
+	<div class="alert alert-cep-nao-encontrado">
+		Poxa, não encontramos o seu CEP. Ele está correto?
+	</div>
+	<div class="informacoes-projeto">
+		<div class="informacoes-painel">
+			<h2 class="informacoes-painel-titulo">Informações do Projeto</h2>
+			<p class="informacoes-painel-descricao">O projeto foi desenvolvido por Guilherme Ramos para fins de estudo sobre API.</p>
+			<h3 class="informacoes-painel-subtitulo">Descrição</h3>
+			<p class="informacoes-painel-paragrafo">O projeto funciona da seguinte forma:</p>
+			<ol class="informacoes-painel-lista informacoes-painel-passos-projeto">
+				<li class="painel-lista-item informacoes-painel-passos-item">O usuário insere o CEP e clica em "Pesquisar" (ícone da lupa);</li>
+				<li class="painel-lista-item informacoes-painel-passos-item">O site faz uma requisição ajax para a API da <a href="https://viacep.com.br/" target="blank">ViaCep</a> (viacep.com.br/ws/CEP-INSERIDO/json). A API retorna alguns dados sobre o CEP (se encontrado). Desses dados, pegaremos somente a Cidade e o Estado (UF);</li>
+				<li class="painel-lista-item informacoes-painel-passos-item">Envimos a Cidade/UF para outra função, que fará uma requisição à primeira API da ClimaTempo. Essa API retorna o ID da cidade em questão;</li>
+				<li class="painel-lista-item informacoes-painel-passos-item">Com o ID da cidade em mãos, faremos outra requisição. Dessa vez, à API da ClimaTempo que retorna, propriamente os dados sobre o a condição climática da cidade informada;</li>
+				<li class="painel-lista-item informacoes-painel-passos-item">Por fim, pasta extrair cada dado do JSON retornado e inseri-lo no espaço destinado a ele.</li>
+			</ol>
+		</div>
+		<button class="informacoes-btn">
+			!
+		</button>
+	</div>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script type="text/javascript">
+		$(function(){
+			requisicaoCep('99060030');
+
+			$(".input-cep").change(function(e){
+				e.preventDefault();
+				let cep = $(".input-cep option:selected").val();
+				$(".input-cep").blur();
+				requisicaoCep(cep);
+				status = true;
+			});
+			$(".informacoes-btn").click(function(){
+				$(".informacoes-painel").fadeToggle(200);
+			});
+		});
+
+		function requisicaoCep(cep) {
+			$(".waiting").fadeIn(200);
+			let url = 'https://viacep.com.br/ws/' + cep + '/json';
+			$.get(url,function(data) {
+				if(data.hasOwnProperty("erro")) {
+					erroConsulta(".alert-cep-nao-encontrado");
+				} else {
+					let cidade = data.localidade;
+					let uf = data.uf;
+					$(".localidade").fadeIn(600);
+					$(".localidade-cidade").text(cidade);
+					$(".localidade-uf").text(uf);
+					requisicaoIdClimaTempo(cidade, uf);
+				}
+			}).fail(function(){
+				erroConsulta(".alert-erro-consulta");
+			});
+		}
+
+		function requisicaoIdClimaTempo(cidade, uf) {
+			let url = "https://apiadvisor.climatempo.com.br/api/v1/locale/city?name="+cidade+"&state="+uf+"&token=c1cdba8979fd4fb41bf76d03b1d04eb9";
+			$.get(url, function(data){
+				let idCidade = data[0].id;
+				previsaoDoTempo(idCidade);
+				previsaoDaSemana(idCidade);
+			}).fail(function(){
+				erroConsulta(".alert-erro-consulta");
+			});
+		}
+
+		function previsaoDoTempo(id) {
+			let urlHoje = "https://apiadvisor.climatempo.com.br/api/v1/weather/locale/"+id+"/current?token=c1cdba8979fd4fb41bf76d03b1d04eb9";
+			$.get(urlHoje,atualizarCardTempo);	
+		}
+
+		function atualizarCardTempo(data) {
+			$(".card-tempo-hoje").text(capturarDataHoje().split("").slice(0,5).join(""))
+			$(".card-tempo-temperatura-temp").text(data.data.temperature + "º");
+			$(".card-tempo-condicao").text(data.data.condition);
+			$(".card-tempo-caracteristicas-umidade-valor").text(data.data.humidity+" %");
+			$(".card-tempo-caracteristicas-sensacao-valor").text(data.data.sensation+" º");
+			$(".card-tempo-caracteristicas-vento-valor").text(data.data.wind_velocity+" km/h");
+			$(".card-tempo").fadeIn(200);
+		}
+
+		function previsaoDaSemana(id) {
+			let hoje = capturarDataHoje();
+			let url = "https://apiadvisor.climatempo.com.br/api/v1/forecast/locale/"+id+"/days/15?token=c1cdba8979fd4fb41bf76d03b1d04eb9";
+			$.get(url,atualizarCardTempoSemana);
+		}
+
+		function atualizarCardTempoSemana(data) {
+			let arrDatas = data.data;
+			let arrDatasPrevisao = arrDatas.slice(1,3);
+			let counter = 1;
+			$(arrDatasPrevisao).each(function(data){
+				let cardDia = ".semana-dia-"+counter;
+				$(cardDia).fadeIn(200);
+
+				let dia = arrDatasPrevisao[data].date_br.slice(0,5);
+				$(cardDia + " .card-tempo-semana-dia-data").text(dia);
+
+				let min = arrDatasPrevisao[data].temperature.min;
+				$(cardDia + " .card-tempo-semana-temp-min-val").text(min);
+
+				let max = arrDatasPrevisao[data].temperature.max;
+				$(cardDia + " .card-tempo-semana-temp-max-val").text(max);
+
+				counter++;
+			});
+			
+			$(".waiting").fadeOut(200);
+		}
+
+		function capturarDataHoje() {
+			let date = new Date();
+			let day = date.getDate();
+			let month = date.getMonth() + 1;
+			if(month < 10) {
+				month = "0"+month;
+			}
+			let year = date.getFullYear();
+			let fulldate = day + "/" + month + "/" + year;
+			return fulldate;	
+		}
+
+		function erroConsulta(alerta) {
+			$(".waiting").fadeOut(200);
+			$(alerta).fadeIn(200);
+			setTimeout(function(){
+				$(alerta).fadeOut(200);
+			},5000)
+		}
+	</script>
+</body>
+</html>
