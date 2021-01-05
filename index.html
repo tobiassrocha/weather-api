@@ -345,6 +345,8 @@
 	<form class="form-cep">
 		<select class="input-cep" name="input-cep">
 			<option value="99010010">passo fundo</option>
+			<option value="99525-000">santo antonio do planalto</option>
+			<option value="99460000">não me toque</option>
 			<option value="99500000">carazinho</option>
 			<option value="99530000">chapada</option>
 			<option value="99560000">sarandi</option>
@@ -426,7 +428,7 @@
 			</ol>
 		</div>
 		<button class="informacoes-btn">
-			!
+			i
 		</button>
 	</div>
 
@@ -456,9 +458,15 @@
 				} else {
 					let cidade = data.localidade;
 					let uf = data.uf;
-					$(".localidade").fadeIn(600);
-					$(".localidade-cidade").text(cidade);
-					$(".localidade-uf").text(uf);
+					
+					if(cidade == "Colorado" && data.uf == 'RS') {
+						$(".localidade-cidade").text('Não-Me-Toque');
+					} else {
+						$(".localidade").fadeIn(600);
+						$(".localidade-cidade").text(cidade);
+						$(".localidade-uf").text(uf);
+					}
+					
 					requisicaoIdClimaTempo(cidade, uf);
 				}
 			}).fail(function(){
