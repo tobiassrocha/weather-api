@@ -427,6 +427,23 @@
 				<li class="painel-lista-item informacoes-painel-passos-item">Por fim, pasta extrair cada dado do JSON retornado e inseri-lo no espaço destinado a ele.</li>
 			</ol>
 		</div>
+		<p class="localidade">
+			<span>Cotações do câmbio</span>
+		</p>
+		<section class="card-tempo" style="display: flex;justify-content: space-between;">
+			<article>
+				<h3 class="title-exchange">USD/BRL</h3>
+				<span class="value-exchange-USD"></span>
+			</article>
+			<article>
+				<h3 class="title-exchange-GBP">GBP/BRL</h3>
+				<span class="value-exchange-GBP"></span>
+			</article>
+			<article>
+				<h3 class="title-exchange-EUR">EUR/BRL</h3>
+				<span class="value-exchange-EUR"></span>
+			</article>
+		</section>
 		<button class="informacoes-btn">
 			i
 		</button>
@@ -436,7 +453,8 @@
 	<script type="text/javascript">
 		$(function(){
 			requisicaoCep('99060030');
-
+			cotacoesCambio();
+			
 			$(".input-cep").change(function(e){
 				e.preventDefault();
 				let cep = $(".input-cep option:selected").val();
@@ -547,6 +565,17 @@
 			setTimeout(function(){
 				$(alerta).fadeOut(200);
 			},5000)
+		}
+
+		function cotacoesCambio() {
+			let url = 'https://economia.awesomeapi.com.br/all/USD-BRL,EUR-BRL,GBP-BRL';
+			$.get(url,atualizarCardCambio);
+		}
+
+		function atualizarCardCambio(data) {
+			$(".value-exchange-USD").text('R$ '+data['USD'].low);
+			$(".value-exchange-GBP").text('R$ '+data['GBP'].low);
+			$(".value-exchange-EUR").text('R$ '+data['EUR'].low);
 		}
 	</script>
 </body>
